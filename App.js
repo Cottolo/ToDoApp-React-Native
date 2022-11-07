@@ -1,85 +1,105 @@
-import React from "react";
+import * as React from "react";
+
+// Import 'NativeBaseProvider' component
 import {
-  Text,
-  Link,
-  HStack,
-  Center,
-  Heading,
-  Switch,
-  useColorMode,
-  NativeBaseProvider,
-  extendTheme,
-  VStack,
-  Box,
-} from "native-base";
-import NativeBaseIcon from "./components/NativeBaseIcon";
-import { Platform } from "react-native";
+    Text,
+    Link,
+    HStack,
+    Center,
+    Heading,
+    Switch,
+    useColorMode,
+    NativeBaseProvider,
+    extendTheme,
+    VStack,
+    Box,
+  } from "native-base";
+// Import font with Expo
+import AppLoading from "expo-app-loading";
+import {
+  useFonts,
+  BalsamiqSans_400Regular,
+  BalsamiqSans_400Regular_Italic,
+} from "@expo-google-fonts/balsamiq-sans";
 
-// Define the config
-const config = {
-  useSystemColorMode: false,
-  initialColorMode: "dark",
-};
-
-// extend the theme
-export const theme = extendTheme({ config });
+// Import Container
+import Container from "./Container";
 
 export default function App() {
-  return (
-    <NativeBaseProvider>
-      <Center
-        _dark={{ bg: "blueGray.900" }}
-        _light={{ bg: "blueGray.50" }}
-        px={4}
-        flex={1}
-      >
-        <VStack space={5} alignItems="center">
-          <NativeBaseIcon />
-          <Heading size="lg">Welcome to NativeBase</Heading>
-          <HStack space={2} alignItems="center">
-            <Text>Edit</Text>
-            <Box
-              _web={{
-                _text: {
-                  fontFamily: "monospace",
-                  fontSize: "sm",
-                },
-              }}
-              px={2}
-              py={1}
-              _dark={{ bg: "blueGray.800" }}
-              _light={{ bg: "blueGray.200" }}
-            >
-              App.js
-            </Box>
-            <Text>and save to reload.</Text>
-          </HStack>
-          <Link href="https://docs.nativebase.io" isExternal>
-            <Text color="primary.500" underline fontSize={"xl"}>
-              Learn NativeBase
-            </Text>
-          </Link>
-          <ToggleDarkMode />
-        </VStack>
-      </Center>
-    </NativeBaseProvider>
-  );
+  // Load Font with Expo
+  let [fontsLoaded] = useFonts({
+    BalsamiqSans_400Regular,
+    BalsamiqSans_400Regular_Italic,
+  });
+
+  // Setup Font
+  const fontConfig = {
+    BalsamiqSans: {
+      400: {
+        normal: "BalsamiqSans_400Regular",
+        italic: "BalsamiqSans_400Regular_Italic",
+      },
+    },
+  };
+
+  const customeColor = {
+    primary: {
+      50: "#E3F2F9",
+      100: "#C5E4F3",
+      200: "#A2D4EC",
+      300: "#7AC1E4",
+      400: "#47A9DA",
+      500: "#0088CC",
+      600: "#007AB8",
+      700: "#006BA1",
+      800: "#005885",
+      900: "#003F5E",
+    },
+    amber: {
+      400: "#d97706",
+    },
+  };
+
+  // Configuration Native Base Custom Theme
+  const theme = extendTheme({
+    colors : customeColor,
+    fontConfig,
+    fonts: {
+      heading: "BalsamiqSans",
+      body: "BalsamiqSans",
+      mono: "BalsamiqSans",
+    },
+    config: { 
+      useSystemColorMode: false,
+      // initialColorMode: "dark" 
+    },
+  });
+
+  if (!fontsLoaded) {
+    return <AppLoading />;
+  } else {
+    return (
+      <NativeBaseProvider theme={theme}>
+        {/* <ToggleDarkMode/> */}
+        <Container />
+      </NativeBaseProvider>
+    );
+  }
 }
 
-// Color Switch Component
-function ToggleDarkMode() {
-  const { colorMode, toggleColorMode } = useColorMode();
-  return (
-    <HStack space={2} alignItems="center">
-      <Text>Dark</Text>
-      <Switch
-        isChecked={colorMode === "light"}
-        onToggle={toggleColorMode}
-        aria-label={
-          colorMode === "light" ? "switch to dark mode" : "switch to light mode"
-        }
-      />
-      <Text>Light</Text>
-    </HStack>
-  );
-}
+// function ToggleDarkMode() {
+//   const { colorMode, toggleColorMode } = useColorMode();
+//   return (
+//     <HStack space={2} alignItems="center">
+//       <Text>Dark</Text>
+//       <Switch
+//         isChecked={colorMode === "light"}
+//         onToggle={toggleColorMode}
+//         aria-label={
+//           colorMode === "light" ? "switch to dark mode" : "switch to light mode"
+//         }
+//       />
+//       <Text>Light</Text>
+//     </HStack>
+//   );
+// }
